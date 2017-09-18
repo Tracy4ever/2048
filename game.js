@@ -4,27 +4,27 @@ $(document).keydown(function(event) {
 	switch(event.keyCode){
 		case 37:  //向左
 			if(moveleft()){
-				generateOneNumber();
+				setTimeout("generateOneNumber();",100);
 				//isgameover();
 			}
 			break;
 		case 38://向上
 			if(moveup()){
-				generateOneNumber();
+				setTimeout("generateOneNumber();",100);
 				//isgameover();
 			}
 			
 			break;
 		case 39:
 			if(moveright()){
-				generateOneNumber();
+				setTimeout("generateOneNumber();",100);
 				//isgameover();
 			}
 			
 			break;
 		case 40:
 			if(movedown()){
-				generateOneNumber();
+				setTimeout("generateOneNumber();",100);
 				//isgameover();
 			}
 			
