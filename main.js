@@ -1,5 +1,7 @@
 /*游戏主逻辑文件*/
 var board = [];
+var score = 0;
+var hasConflicted = [];
 $(function() {
     newgame();
 });
@@ -13,12 +15,21 @@ function newgame() {
 
 }
 
+function restartgame() {
+    $("#gameover").remove();
+    updateScore(0);
+    newgame();
+    
+}
+
 function init() {
     //初始化棋盘格
     for (var i = 0; i < 4; i++) {
         board[i] = [];
+        hasConflicted[i] = [];
         for (var j = 0; j < 4; j++) {
             board[i][j] = 0;
+            hasConflicted[i][j]=false;
             var gridCell = $("#grid-cell-" + i + "-" + j);
             gridCell.css("top", getPosTop(i, j));
             gridCell.css("left", getPosLeft(i, j));
@@ -26,6 +37,8 @@ function init() {
 
     }
     updateBoardView();
+    score=0;
+    $('#score').text(score);
 }
 /*初始化数字格*/
 function updateBoardView() {
@@ -46,9 +59,10 @@ function updateBoardView() {
                 numberCell.css("left", getPosLeft(i, j));
                 numberCell.css("background-color", getNumberBackgroundColor(board[i][j]));
                 numberCell.css("color", getNumberColor(board[i][j]));
-                numberCell.text(board[i][j]);
-
+                numberCell.css("font-size",getNumberFontSize(board[i][j]));
+                numberCell.text(board[i][j])
             }
+            hasConflicted[i][j]=false;
         }
     }
 }
@@ -70,4 +84,5 @@ function generateOneNumber() {
     board[randx][randy]=randNumber;
     showNumberWithAnimation(randx,randy,randNumber);
 }
+
 

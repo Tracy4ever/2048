@@ -4,28 +4,32 @@ $(document).keydown(function(event) {
 	switch(event.keyCode){
 		case 37:  //向左
 			if(moveleft()){
-				setTimeout("generateOneNumber();",100);
-				//isgameover();
+				setTimeout("generateOneNumber();",210);
+				setTimeout("isgameover()",300);
+				
 			}
 			break;
 		case 38://向上
 			if(moveup()){
-				setTimeout("generateOneNumber();",100);
-				//isgameover();
+				setTimeout("generateOneNumber();",210);
+				setTimeout("isgameover()",300);
+				
 			}
 			
 			break;
 		case 39:
 			if(moveright()){
-				setTimeout("generateOneNumber();",100);
-				//isgameover();
+				setTimeout("generateOneNumber();",210);
+				setTimeout("isgameover()",300);
+				
 			}
 			
 			break;
 		case 40:
 			if(movedown()){
-				setTimeout("generateOneNumber();",100);
-				//isgameover();
+				setTimeout("generateOneNumber();",210);
+				setTimeout("isgameover()",300);
+				
 			}
 			
 			break;
@@ -44,14 +48,22 @@ function moveleft(){
 			for (var j =1; j <4; j++) {
 				if(board[i][j]!==0){
 					for (var k = 0; k<j; k++) {
+						/*debugger;*/
 						if(board[i][k]===0 && noBlockHorizontalCol(i,k,j,board)){
 							showMoveAnimation(i,j,i,k);
 							board[i][k]=board[i][j];
 							board[i][j]=0;
-						}else if(board[i][k]==board[i][j]&&noBlockHorizontalCol(i,k,j,board)){
+							continue;
+						}else if(board[i][k]==board[i][j]&&noBlockHorizontalCol(i,k,j,board)&&!hasConflicted[i][k]){
 							showMoveAnimation(i,j,i,k);
 							board[i][k]+=board[i][j];
 							board[i][j]=0;
+
+							score +=board[i][k];
+							updateScore(score);
+
+							hasConflicted[i][k]=true;
+							continue;
 						}	
 					}
 				}
@@ -75,10 +87,15 @@ function moveright() {
 							showMoveAnimation(i,j,i,k);
 							board[i][k]=board[i][j];
 							board[i][j]=0;
-						}else if(board[i][j]==board[i][k]&&noBlockHorizontalCol(i,j,k,board)){
+							continue;
+						}else if(board[i][j]==board[i][k]&&noBlockHorizontalCol(i,j,k,board)&&!hasConflicted[i][k]){
 							showMoveAnimation(i,j,i,k);
 							board[i][k]+=board[i][j];
 							board[i][j]=0;
+							score+=board[i][k];
+							updateScore(score);
+							hasConflicted[i][k]=true;
+							continue;
 						}
 					}
 				}
@@ -101,10 +118,15 @@ function moveup(){
 							showMoveAnimation(i,j,k,j);
 							board[k][j]=board[i][j];
 							board[i][j]=0;
-						}else if(board[k][j]==board[i][j]&&noBlockHorizontalRow(i,k,j,board)){
+							continue;
+						}else if(board[k][j]==board[i][j]&&noBlockHorizontalRow(i,k,j,board)&&!hasConflicted[k][j]){
 							showMoveAnimation(i,j,k,j);
 							board[k][j]+=board[i][j];
 							board[i][j]=0;
+							score +=board[k][j];
+							updateScore(score);
+							hasConflicted[k][j]=true;
+							continue;
 						}
 					}
 				}
@@ -128,10 +150,17 @@ function movedown(){
 							showMoveAnimation(i,j,k,j);
 							board[k][j]=board[i][j];
 							board[i][j]=0;
-						}else if(board[k][j]==board[i][j]&&noBlockHorizontalRow(k,i,j,board)){
+							continue;
+						}else if(board[k][j]==board[i][j]&&noBlockHorizontalRow(k,i,j,board)&&!hasConflicted[k][j]){
 							showMoveAnimation(i,j,k,j);
 							board[k][j]+=board[i][j];
 							board[i][j]=0;
+
+							score +=board[k][j];
+							updateScore(score);
+
+							hasConflicted[k][j]=true;
+							continue;
 						}
 					}
 				}
@@ -142,72 +171,24 @@ function movedown(){
 	}
 }
 
-function canMoveLeft(board){
-	for (var i = 0; i < 4; i++) {
-		for (var j = 1; j <4; j++) {
-			if(board[i][j]!==0){
-				if(board[i][j-1]===0||board[i][j]==board[i][j-1]){
-					return true;
-				}
-			}
-		}
+
+
+function isgameover(){
+	
+	if (nospace(board)&&nomove(board)) {
+		gameover();
 	}
-	return false;
 }
 
-function canMoveRight(board) {
-	for (var i = 0; i <4; i++) {
-		for (var j = 2; j >=0; j--) {
-			if(board[i][j]!==0){
-				if(board[i][j]==board[i][j+1]||board[i][j+1]==0){
-					return true;
-				}
-			}
-		}
-	}
-	return false;
+function gameover(){
+	
+	$('#grid-container').append('<div id="gameover" class="gameover"><p>本次得分</p><span>'+score+'</span><a href="javascript:restartgame()" id="restartgamebutton" >Restart</a>')
+	var gameover =$("#gameover");
+	gameover.css("width","500px");
+	gameover.css("height","500px");
+	gameover.css("background-color",'rgba(0,0,0,0.5)');
+	
 }
 
-function canMoveUp(board) {
-	for (var j = 0; j < 4; j++) {
-		for (var i = 1; i < 4; i++) {
-			if(board[i][j]!=0){
-				if(board[i-1][j]==0||board[i-1][j]==board[i][j]){
-					return true;
-				}
-			}
-		}
-	}
-	return false;
-}
 
-function canMoveDown(board) {
-	for (var j = 0; j <4; j++) {
-		for (var i = 2; i >= 0; i--) {
-			if (board[i][j]!==0) {
-				if(board[i][j]==board[i+1][j]||board[i+1][j]==0){
-					return true;
-				}
-			}
-		}
-	}
-	return false;
-}
 
-function noBlockHorizontalCol(row,col1,col2,board){
-	for (var j=col1+1 ; j < col2; j++) {
-		if(board[row][j]!==0){
-			return false;
-		}
-	}
-	return true;
-}
-
-function noBlockHorizontalRow(row1,row2,col,board) {
-	for (var i = row2+1; i < row1; i++) {
-		if(board[i][col]!=0){
-			return false;
-		}
-	}
-	return true;
-}

@@ -4,6 +4,7 @@ function showNumberWithAnimation(i,j,randNumber){
 	numberCell.css('background-color',getNumberBackgroundColor(randNumber));
 	numberCell.css('color',getNumberColor(randNumber));
 	numberCell.text(randNumber);
+	numberCell.css("font-size",getNumberFontSize(randNumber));
 	numberCell.animate({
 		width: "100px",
 		height: "100px",
@@ -18,4 +19,8 @@ function showMoveAnimation(fromx,fromy,tox,toy) {
 		top:getPosTop(tox,toy),
 		left:getPosLeft(tox,toy)
 	},200);
+}
+
+function updateScore(score){
+	$("#score").text(score);
 }
