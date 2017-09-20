@@ -7,6 +7,8 @@ $(function() {
 });
 
 function newgame() {
+    $("#gameover").remove();
+    updateScore(0);
     //初始化棋盘格和数字格
     init();
     //生成两个随机位置的数字
